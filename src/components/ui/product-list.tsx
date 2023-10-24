@@ -1,7 +1,7 @@
 import type { Product } from "@prisma/client";
+import { computeProductTotalPrice } from "@/helpers/product";
 
 import { ProductItem } from "@/components/ui/product-item";
-import { computeProductTotalPrice } from "@/helpers/product";
 
 interface ProductListProps {
   products: Product[];
