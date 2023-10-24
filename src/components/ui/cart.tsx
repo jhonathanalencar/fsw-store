@@ -3,9 +3,11 @@ import { Badge } from "./badge";
 import { useContext } from "react";
 import { CartContext } from "@/providers/cart";
 import { CartItem } from "./cart-item";
+import { Separator } from "./separator";
 
 export const Cart = () => {
-  const { products } = useContext(CartContext);
+  const { products, cartBasePrice, cartTotalDiscount, cartTotalPrice } =
+    useContext(CartContext);
 
   return (
     <div className="flex flex-col gap-8">
@@ -14,13 +16,49 @@ export const Cart = () => {
         variant="outline"
       >
         <ShoppingCartIcon size={16} />
-        Catálogo
+        Carrinho
       </Badge>
 
       <div className="flex flex-col gap-5">
-        {products.map((product) => (
-          <CartItem key={product.id} product={product} />
-        ))}
+        {products.length > 0 ? (
+          products.map((product) => (
+            <CartItem key={product.id} product={product} />
+          ))
+        ) : (
+          <p className="text-center font-semibold">
+            Carrinho vazio. Vamos fazer compras?
+          </p>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <Separator />
+
+        <div className="flex items-center justify-between text-xs">
+          <p>Subtotal</p>
+          <p>R$ {cartBasePrice.toFixed(2)}</p>
+        </div>
+
+        <Separator />
+
+        <div className="flex items-center justify-between text-xs">
+          <p>Entrega</p>
+          <p>GRÁTIS</p>
+        </div>
+
+        <Separator />
+
+        <div className="flex items-center justify-between text-xs">
+          <p>Descontos</p>
+          <p>- R$ {cartTotalDiscount.toFixed(2)}</p>
+        </div>
+
+        <Separator />
+
+        <div className="flex items-center justify-between text-sm font-bold">
+          <p>Total</p>
+          <p>R$ {cartTotalPrice.toFixed(2)}</p>
+        </div>
       </div>
     </div>
   );
