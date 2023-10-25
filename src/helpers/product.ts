@@ -13,7 +13,7 @@ type Product = {
   basePrice: Prisma.Decimal;
 };
 
-type PlainProduct = Omit<Product, "basePrice"> & { basePrice: number };
+export type PlainProduct = Omit<Product, "basePrice"> & { basePrice: number };
 
 export interface ProductWithTotalPrice extends PlainProduct {
   totalPrice: number;
