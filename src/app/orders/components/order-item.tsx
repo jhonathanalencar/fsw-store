@@ -1,3 +1,10 @@
+import { useMemo } from "react";
+import { format } from "date-fns";
+
+import { computeProductTotalPrice } from "@/helpers/product";
+import { convertProductToPlainObject } from "@/helpers/convert-product-to-plain-object";
+import { Prisma } from "@prisma/client";
+
 import {
   Accordion,
   AccordionContent,
@@ -5,8 +12,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card } from "@/components/ui/card";
-import { Prisma } from "@prisma/client";
 import OrderProductItem from "./order-product-item";
+import { Separator } from "@/components/ui/separator";
 
 interface OrderItemProps {
   order: Prisma.OrderGetPayload<{
@@ -21,18 +28,43 @@ interface OrderItemProps {
 }
 
 export const OrderItem = ({ order }: OrderItemProps) => {
+  const subtotal = useMemo(() => {
+    return order.orderProducts.reduce((acc, orderProduct) => {
+      return (
+        acc + Number(orderProduct.product.basePrice) * orderProduct.quantity
+      );
+    }, 0);
+  }, [order.orderProducts]);
+
+  const total = useMemo(() => {
+    return order.orderProducts.reduce((acc, product) => {
+      const productWithTotalPrice = computeProductTotalPrice(
+        convertProductToPlainObject(product.product),
+      );
+
+      return acc + productWithTotalPrice.totalPrice * product.quantity;
+    }, 0);
+  }, [order.orderProducts]);
+
+  const totalDiscounts = subtotal - total;
+
   return (
     <Card className="px-5">
       <Accordion type="single" className="w-full" collapsible>
         <AccordionItem value={order.id}>
           <AccordionTrigger>
             <div className="flex flex-col gap-1 text-left">
-              Pedido com {order.orderProducts.length} produto(s)
+              <p className="text-sm font-bold uppercase">
+                Pedido com {order.orderProducts.length} produto(s)
+              </p>
+              <span className="text-xs opacity-60">
+                Feito em {format(order.createdAt, "d/MM/y 'às' HH:mm")}
+              </span>
             </div>
           </AccordionTrigger>
 
           <AccordionContent>
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between">
                 <div className="font-bold">
                   <p>Status</p>
@@ -58,6 +90,36 @@ export const OrderItem = ({ order }: OrderItemProps) => {
                   orderProduct={orderProduct}
                 />
               ))}
+
+              <div className="flex w-full flex-col gap-1 text-xs">
+                <Separator />
+
+                <div className="flex w-full justify-between py-3">
+                  <p>Subtotal</p>
+                  <p>R$ {subtotal.toFixed(2)}</p>
+                </div>
+
+                <Separator />
+
+                <div className="flex w-full justify-between py-3">
+                  <p>Entrega</p>
+                  <p>GRÁTIS</p>
+                </div>
+
+                <Separator />
+
+                <div className="flex w-full justify-between py-3">
+                  <p>Descontos</p>
+                  <p>- R$ {totalDiscounts.toFixed(2)}</p>
+                </div>
+
+                <Separator />
+
+                <div className="flex w-full justify-between py-3 text-sm font-bold">
+                  <p>Total</p>
+                  <p>R$ {total.toFixed(2)}</p>
+                </div>
+              </div>
             </div>
           </AccordionContent>
         </AccordionItem>
