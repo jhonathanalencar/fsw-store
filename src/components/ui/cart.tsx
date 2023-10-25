@@ -10,12 +10,22 @@ import { CartItem } from "./cart-item";
 import { Separator } from "./separator";
 import { ScrollArea } from "./scroll-area";
 import { Button } from "./button";
+import { useSession } from "next-auth/react";
+import { createOrder } from "@/actions/order";
 
 export const Cart = () => {
+  const { data } = useSession();
+
   const { products, cartBasePrice, cartTotalDiscount, cartTotalPrice } =
     useContext(CartContext);
 
   const handleFinishPurchaseClick = async () => {
+    if (!data?.user) {
+      return;
+    }
+
+    await createOrder(products, data.user.id);
+
     const checkoutStringfy = await createCheckout(products);
     const checkout = JSON.parse(checkoutStringfy);
     const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
