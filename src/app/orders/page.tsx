@@ -18,7 +18,11 @@ export default async function OrdersPage() {
       userId: session.user.id,
     },
     include: {
-      orderProducts: true,
+      orderProducts: {
+        include: {
+          product: true,
+        },
+      },
     },
   });
 

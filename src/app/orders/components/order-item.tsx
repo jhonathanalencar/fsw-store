@@ -6,9 +6,18 @@ import {
 } from "@/components/ui/accordion";
 import { Card } from "@/components/ui/card";
 import { Prisma } from "@prisma/client";
+import OrderProductItem from "./order-product-item";
 
 interface OrderItemProps {
-  order: Prisma.OrderGetPayload<{ include: { orderProducts: true } }>;
+  order: Prisma.OrderGetPayload<{
+    include: {
+      orderProducts: {
+        include: {
+          product: true;
+        };
+      };
+    };
+  }>;
 }
 
 export const OrderItem = ({ order }: OrderItemProps) => {
@@ -42,6 +51,13 @@ export const OrderItem = ({ order }: OrderItemProps) => {
                   <p className="opacity-60">Cartão</p>
                 </div>
               </div>
+
+              {order.orderProducts.map((orderProduct) => (
+                <OrderProductItem
+                  key={orderProduct.id}
+                  orderProduct={orderProduct}
+                />
+              ))}
             </div>
           </AccordionContent>
         </AccordionItem>
