@@ -4,6 +4,7 @@ import { Categories } from "./components/categories";
 import { ProductList } from "../../components/ui/product-list";
 import { SectionTitle } from "../../components/ui/section-title";
 import { PromoBanner } from "./components/promo-banner";
+import { convertProductToPlainObject } from "@/helpers/convert-product-to-plain-object";
 
 export default async function Home() {
   const deals = await prismaClient.product.findMany({
@@ -43,7 +44,9 @@ export default async function Home() {
 
       <div>
         <SectionTitle>Ofertas</SectionTitle>
-        <ProductList products={deals} />
+        <ProductList
+          products={deals.map((deal) => convertProductToPlainObject(deal))}
+        />
       </div>
 
       <PromoBanner
@@ -53,7 +56,11 @@ export default async function Home() {
 
       <div>
         <SectionTitle>Teclados</SectionTitle>
-        <ProductList products={keyboards} />
+        <ProductList
+          products={keyboards.map((keyboard) =>
+            convertProductToPlainObject(keyboard),
+          )}
+        />
       </div>
 
       <PromoBanner
@@ -63,7 +70,9 @@ export default async function Home() {
 
       <div>
         <SectionTitle>Mouses</SectionTitle>
-        <ProductList products={mouses} />
+        <ProductList
+          products={mouses.map((mouse) => convertProductToPlainObject(mouse))}
+        />
       </div>
     </div>
   );

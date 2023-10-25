@@ -4,7 +4,7 @@ import { computeProductTotalPrice } from "@/helpers/product";
 import { ProductItem } from "@/components/ui/product-item";
 
 interface ProductListProps {
-  products: Product[];
+  products: PlainProduct[];
 }
 
 export const ProductList = ({ products }: ProductListProps) => {

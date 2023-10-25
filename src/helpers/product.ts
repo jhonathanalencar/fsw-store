@@ -1,6 +1,21 @@
-import { Product } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
-export interface ProductWithTotalPrice extends Product {
+type Product = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  imageUrls: string[];
+  categoryId: string;
+  discountPercentage: number;
+  createdAt: Date;
+  updatedAt: Date;
+  basePrice: Prisma.Decimal;
+};
+
+type PlainProduct = Omit<Product, "basePrice"> & { basePrice: number };
+
+export interface ProductWithTotalPrice extends PlainProduct {
   totalPrice: number;
 }
 
@@ -10,6 +25,7 @@ export const computeProductTotalPrice = (
   if (product.discountPercentage === 0) {
     return {
       ...product,
+      basePrice: Number(product.basePrice),
       totalPrice: Number(product.basePrice),
     };
   }
@@ -19,6 +35,7 @@ export const computeProductTotalPrice = (
 
   return {
     ...product,
+    basePrice: Number(product.basePrice),
     totalPrice: Number(product.basePrice) - totalDiscount,
   };
 };

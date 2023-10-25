@@ -1,15 +1,16 @@
 import { NextResponse } from "next/server";
+import { headers } from "next/headers";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2023-10-16",
 });
 
-export const POST = async (request: Request) => {
-  const signature = request.headers.get("stripe-signature");
+export async function POST(request: Request) {
+  const signature = headers().get("stripe-signature");
 
   if (!signature) {
-    return NextResponse.json({ error: "No signature" });
+    return new Response(JSON.stringify({ error: "No signature" }));
   }
 
   const text = await request.text();
@@ -35,5 +36,5 @@ export const POST = async (request: Request) => {
     // criar pedido
   }
 
-  return NextResponse.json({ received: true });
-};
+  return Response.json({ received: true });
+}

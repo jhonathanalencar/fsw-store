@@ -30,5 +30,5 @@ export const createCheckout = async (products: CartProduct[]) => {
     }),
   });
 
-  return checkout;
+  return JSON.stringify(checkout);
 };

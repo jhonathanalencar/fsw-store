@@ -16,8 +16,8 @@ export const Cart = () => {
     useContext(CartContext);
 
   const handleFinishPurchaseClick = async () => {
-    const checkout = await createCheckout(products);
-
+    const checkoutStringfy = await createCheckout(products);
+    const checkout = JSON.parse(checkoutStringfy);
     const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
     stripe?.redirectToCheckout({
