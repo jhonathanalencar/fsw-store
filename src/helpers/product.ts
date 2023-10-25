@@ -20,12 +20,12 @@ export interface ProductWithTotalPrice extends PlainProduct {
 }
 
 export const computeProductTotalPrice = (
-  product: Product,
+  product: PlainProduct,
 ): ProductWithTotalPrice => {
   if (product.discountPercentage === 0) {
     return {
       ...product,
-      basePrice: Number(product.basePrice),
+      // basePrice: Number(product.basePrice),
       totalPrice: Number(product.basePrice),
     };
   }
@@ -35,7 +35,7 @@ export const computeProductTotalPrice = (
 
   return {
     ...product,
-    basePrice: Number(product.basePrice),
+    // basePrice: Number(product.basePrice),
     totalPrice: Number(product.basePrice) - totalDiscount,
   };
 };

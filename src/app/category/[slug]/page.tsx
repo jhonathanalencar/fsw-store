@@ -4,6 +4,7 @@ import { computeProductTotalPrice } from "@/helpers/product";
 
 import { Badge } from "@/components/ui/badge";
 import { ProductItem } from "@/components/ui/product-item";
+import { convertProductToPlainObject } from "@/helpers/convert-product-to-plain-object";
 
 export default async function CategoryPage({
   params,
@@ -37,7 +38,9 @@ export default async function CategoryPage({
         {category.products.map((product) => (
           <ProductItem
             key={product.id}
-            product={computeProductTotalPrice(product)}
+            product={computeProductTotalPrice(
+              convertProductToPlainObject(product),
+            )}
           />
         ))}
       </div>
