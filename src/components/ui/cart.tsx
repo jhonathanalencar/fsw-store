@@ -24,9 +24,9 @@ export const Cart = () => {
       return;
     }
 
-    await createOrder(products, data.user.id);
+    const order = await createOrder(products, data.user.id);
 
-    const checkoutStringfy = await createCheckout(products);
+    const checkoutStringfy = await createCheckout(products, order.id);
     const checkout = JSON.parse(checkoutStringfy);
     const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
