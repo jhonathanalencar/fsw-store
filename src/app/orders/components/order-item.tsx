@@ -14,6 +14,7 @@ import {
 import { Card } from "@/components/ui/card";
 import OrderProductItem from "./order-product-item";
 import { Separator } from "@/components/ui/separator";
+import { getOrderStatus } from "../helpers/status";
 
 interface OrderItemProps {
   order: Prisma.OrderGetPayload<{
@@ -68,7 +69,9 @@ export const OrderItem = ({ order }: OrderItemProps) => {
               <div className="flex items-center justify-between">
                 <div className="font-bold">
                   <p>Status</p>
-                  <p className="text-[#8162FF]">{order.status}</p>
+                  <p className="text-[#8162FF]">
+                    {getOrderStatus(order.status)}
+                  </p>
                 </div>
 
                 <div>
